@@ -1,0 +1,44 @@
+{
+  "name": "yassir3wad/nova-auditing",
+  "description": "A Laravel Nova resource tool.",
+  "keywords": [
+    "laravel",
+    "nova",
+    "auditing",
+    "audit",
+    "tool",
+    "resource",
+    "resource tool"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.1.0",
+    "laravel/framework": "5.8.*",
+    "laravel/nova": "^2.0",
+    "orlyapps/nova-multiline-text": "^0.0.1",
+    "owen-it/laravel-auditing": "^9.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yassir3wad\\NovaAuditing\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Yassir3wad\\NovaAuditing\\ToolServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://nova.laravel.com"
+    }
+  ]
+}
