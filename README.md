@@ -1,13 +1,13 @@
-#Laravel Nova Auditing
+# Laravel Nova Auditing
 
 This package provides an implementation for [laravel auditing](http://laravel-auditing.com)
 
-##Features
+## Features
 *   Display all audit resources for a specified resource.
 *   Display an audit details, and specify where the changes happened.
 *   Revert a model into a specified audit.
 
-##Installation
+## Installation
 
 ```
 composer require yassir3wad/nova-auditing
@@ -19,5 +19,5 @@ First of all, follow the [installation guide](http://laravel-auditing.com/docs/9
 composer require yassir3wad/nova-auditing
 ```
 
-##Usage
+## Usage
 
