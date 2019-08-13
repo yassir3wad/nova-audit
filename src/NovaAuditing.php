@@ -13,7 +13,7 @@ class NovaAuditing extends ResourceTool
      */
     public function name()
     {
-        return 'Nova Auditing';
+        return 'Audits';
     }
 
     /**

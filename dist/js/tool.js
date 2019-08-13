@@ -289,8 +289,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['resourceName', 'resourceId', 'resource', 'panel'],
@@ -305,16 +303,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         auditableResourceName: function auditableResourceName() {
-            return 'posts';
+            return this.getAuditableField.resourceName;
         },
         auditableResourceId: function auditableResourceId() {
-            return 1;
+            return this.getAuditableField.morphToId;
+        },
+        getAuditableField: function getAuditableField() {
+            return this.resource.fields.find(function (field) {
+                return field.attribute === "auditable" && field.morphToRelationship === "auditable";
+            });
         }
     },
     mounted: function mounted() {
         var _this = this;
 
-        axios.get('/nova-vendor/nova-auditing/audits/' + this.resourceId).then(function (_ref) {
+        axios.get('/nova-vendor/nova-auditing/' + this.auditableResourceName + '/' + this.resourceId).then(function (_ref) {
             var _ref$data = _ref.data,
                 current = _ref$data.current,
                 previous = _ref$data.previous,
@@ -397,7 +400,6 @@ var render = function() {
                       attrs: {
                         "resource-name": _vm.auditableResourceName,
                         "resource-id": _vm.auditableResourceId,
-                        resource: _vm.resource,
                         field: field
                       }
                     })
@@ -442,7 +444,6 @@ var render = function() {
                       attrs: {
                         "resource-name": _vm.auditableResourceName,
                         "resource-id": _vm.auditableResourceId,
-                        resource: _vm.resource,
                         field: field
                       }
                     })

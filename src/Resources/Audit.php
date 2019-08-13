@@ -52,13 +52,13 @@ class Audit extends Resource
 
             Text::make("Event"),
 
-            MorphTo::make('By', 'user')->types(config('nova-audit.user_resources')),
+            MorphTo::make('By', 'user')->types(config('novaaudit.user_resources')),
 
             MultilineText::make("Changes On", function () {
                 return array_keys($this->resource->getModified());
             })->highlightFirst(false),
 
-            MorphTo::make('Auditable')->types(config('nova-audit.user_resources')),
+            MorphTo::make('Auditable')->types(config('novaaudit.auditable_resources')),
 
             Text::make("Url")->onlyOnDetail(),
 
@@ -88,7 +88,9 @@ class Audit extends Resource
     public function actions(Request $request)
     {
         return [
-            new RevertAction()
+            (new RevertAction())->canRun(function () {
+                return true;
+            })
         ];
     }
 

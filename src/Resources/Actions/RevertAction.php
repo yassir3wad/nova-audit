@@ -4,12 +4,13 @@ namespace Yassir3wad\NovaAuditing\Resources\Actions;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Collection;
-use Laravel\Nova\Actions\DestructiveAction;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use \OwenIt\Auditing\Models\Audit;
 
-class RevertAction extends DestructiveAction
+class RevertAction extends Action
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,8 +36,13 @@ class RevertAction extends DestructiveAction
         return [];
     }
 
-    private function revert()
+    private function revert(Audit $audit)
     {
-
+        \DB::transaction(function () use ($audit) {
+            $audit->auditable->transitionTo($audit, true)->save();
+            $audit->old_values = [];
+            $audit->new_values = [];
+            $audit->save();
+        });
     }
 }

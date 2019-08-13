@@ -6,6 +6,7 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Yassir3wad\NovaAuditing\Resources\Audit;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -21,13 +22,17 @@ class ToolServiceProvider extends ServiceProvider
         });
 
         $this->publishes([
-            __DIR__.'/../config/nova-audit.php' => config_path('nova-audit.php'),
+            __DIR__.'/../config/novaaudit.php' => config_path('novaaudit.php'),
         ]);
 
         Nova::serving(function (ServingNova $event) {
             Nova::script('nova-auditing', __DIR__.'/../dist/js/tool.js');
             Nova::style('nova-auditing', __DIR__.'/../dist/css/tool.css');
         });
+
+        Nova::resources([
+            Audit::class
+        ]);
     }
 
     /**

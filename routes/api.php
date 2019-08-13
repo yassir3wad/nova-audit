@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/audits/{audit}', [\Yassir3wad\NovaAuditing\Http\Controllers\AuditController::class, 'fields']);
+Route::get('/{resource}/{audit}', [\Yassir3wad\NovaAuditing\Http\Controllers\AuditController::class, 'fields']);

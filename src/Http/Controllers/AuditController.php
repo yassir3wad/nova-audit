@@ -3,25 +3,30 @@
 namespace Yassir3wad\NovaAuditing\Http\Controllers;
 
 
-use App\Models\Post;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Contracts\ListableField;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Nova;
 use Laravel\Nova\ResourceToolElement;
 use \OwenIt\Auditing\Models\Audit;
 
 class AuditController extends BaseController
 {
-    public function fields(NovaRequest $request, Audit $audit)
+    public function fields(NovaRequest $request, $resource, Audit $audit)
     {
         $changes = array_keys($audit->getModified());
 
-        $dirtyLatestArticleFromOld = $audit->auditable->transitionTo($audit, true);
+        $model = $audit->auditable;
 
-        $previous = new \App\Nova\Post($dirtyLatestArticleFromOld);
-        $current = new \App\Nova\Post(Post::find($audit->auditable_id));
+        $resource = tap(Nova::resourceForKey(request('resource')), function ($resource) {
+            abort_if(is_null($resource), 404);
+        });
+
+        $previous = new $resource($model->transitionTo($audit, true));
+        $current = new $resource($model->newModelQuery()->find($model->getKey()));
 
         return response()->json([
             'previous' => $this->filter($previous->detailFields($request))->values()->all(),
