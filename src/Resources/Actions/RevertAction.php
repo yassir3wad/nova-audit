@@ -39,10 +39,19 @@ class RevertAction extends Action
     private function revert(Audit $audit)
     {
         \DB::transaction(function () use ($audit) {
-            $audit->auditable->transitionTo($audit, true)->save();
-            $audit->old_values = [];
-            $audit->new_values = [];
-            $audit->save();
+            $model = $audit->auditable;
+
+            $model->audits()->latest('id')
+                ->where("id", ">=", $audit->id)
+                ->each(function (Audit $audit) use (&$model) {
+                    $model->transitionTo($audit, true);
+                });
+
+            $model->save();
+
+            $model->audits()->orderBy('id')
+                ->where("id", ">=", $audit->id)
+                ->delete();
         });
     }
 }

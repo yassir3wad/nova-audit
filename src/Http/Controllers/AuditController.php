@@ -2,8 +2,6 @@
 
 namespace Yassir3wad\NovaAuditing\Http\Controllers;
 
-
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Contracts\ListableField;
@@ -17,7 +15,7 @@ class AuditController extends BaseController
 {
     public function fields(NovaRequest $request, $resource, Audit $audit)
     {
-        $changes = array_keys($audit->getModified());
+        $changes = [];
 
         $model = $audit->auditable;
 
@@ -25,7 +23,14 @@ class AuditController extends BaseController
             abort_if(is_null($resource), 404);
         });
 
-        $previous = new $resource($model->transitionTo($audit, true));
+        $model->audits()->latest('id')
+            ->where("id", ">=", $audit->id)
+            ->each(function (Audit $audit) use (&$model, &$changes) {
+                $changes = array_values(array_unique(array_merge(array_keys($audit->getModified()), $changes)));
+                $model->transitionTo($audit, true);
+            });
+
+        $previous = new $resource($model);
         $current = new $resource($model->newModelQuery()->find($model->getKey()));
 
         return response()->json([
