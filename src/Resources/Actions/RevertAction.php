@@ -8,6 +8,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use Laravel\Nova\Nova;
 use \OwenIt\Auditing\Models\Audit;
 
 class RevertAction extends Action
@@ -23,7 +24,12 @@ class RevertAction extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $this->revert($models->first());
+        $model = $models->first();
+        $resource = Nova::newResourceFromModel($model->auditable);
+
+        $this->revert($model);
+
+        return Action::push('/resources/' . get_class($resource)::uriKey() . '/' . $resource->getRouteKey());
     }
 
     /**
