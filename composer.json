@@ -13,7 +13,6 @@
   "license": "MIT",
   "require": {
     "php": ">=7.1.0",
-    "laravel/framework": "5.8.*",
     "laravel/nova": "^2.0",
     "orlyapps/nova-multiline-text": "^0.0.1",
     "owen-it/laravel-auditing": "^9.2"
